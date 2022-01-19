@@ -13,13 +13,9 @@
 ##   - How to transform mtime and size before output?
 ##
 
-from mysql.connector import connect, Error
-import os
-import subprocess
-import datetime
 
 ##
-## Configuration
+## Begin Configuration
 ##
 mysql_user = "pyVideos"
 mysql_password = "Q*8W/J6fOvujz@Ck"
@@ -31,6 +27,11 @@ root = "/mnt/nfs/videos/Movies"
 ## End configuration
 ##
 
+from mysql.connector import connect, Error
+import os
+import subprocess
+import datetime
+
 def mysql_open():
     global db_conn, db
     try:
@@ -40,6 +41,7 @@ def mysql_open():
 
     db = db_conn.cursor()
 
+
 def mysql_close():
     db.close()
     db_conn.close()
@@ -48,6 +50,7 @@ def mysql_close():
 #def clear_screen():
 #   if os.name == 'posix':
 #      _ = os.system('clear')
+
 
 def get_response():
     print("\n"
@@ -120,6 +123,7 @@ def do_import():
     db_conn.commit()
     mysql_close()
 
+
 def do_search(search):
     mysql_open()
     print()
@@ -138,6 +142,7 @@ def do_search(search):
         x = video[4]
         y = video[5]
         print(f"{name} | {res} | {size} MB | {mtime} | {x}x{y}")
+
 
 def do_compare():
     problem_videos = []
