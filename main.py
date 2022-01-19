@@ -13,6 +13,7 @@
 ##   - How to transform mtime and size before output?
 ## > Add function for requested videos
 ## > Add function for video problems (i.e. bad subtitles, bad quality)
+## > Web interface
 ##
 
 
@@ -67,7 +68,7 @@ def get_response():
 def do_import():
     mysql_open()
     print("Initializing table ...")
-    db.execute("CREATE OR REPLACE TABLE videos "
+    db.execute("CREATE OR REPLACE TABLE videos"
             "(id SMALLINT(5) NOT NULL AUTO_INCREMENT,"
             "name VARCHAR(80) NOT NULL,"
             "size BIGINT(11) NOT NULL,"
@@ -104,16 +105,16 @@ def do_import():
                 a_layout = a_layout.replace("(side)", "")
             db.execute(f"INSERT INTO videos (name, size, mtime, res_folder, x, y, video_codec, audio_codec, audio_channels, audio_layout)"
                     "VALUES ("
-                    "'{file_name}',"
-                    "'{file_size}',"
-                    "'{file_mtime}',"
-                    "'{curr_resolution}',"
-                    "'{x_val}',"
-                    "'{y_val}',"
-                    "'{v_codec}',"
-                    "'{a_codec}',"
-                    "'{a_channels}',"
-                    "'{a_layout}')")
+                    f"'{file_name}',"
+                    f"'{file_size}',"
+                    f"'{file_mtime}',"
+                    f"'{curr_resolution}',"
+                    f"'{x_val}',"
+                    f"'{y_val}',"
+                    f"'{v_codec}',"
+                    f"'{a_codec}',"
+                    f"'{a_channels}',"
+                    f"'{a_layout}')")
         db_conn.commit()
         print("Done")
 
@@ -148,15 +149,16 @@ def do_search(search):
 
 def do_compare():
     problem_videos = []
-    mysql_open()
+    total_size = 0
     print()
+    mysql_open()
     for curr_resolution in resolutions:
         dir_videos = os.listdir(f"{root}/{curr_resolution}")
-        #print(file_name)
-        db.execute(f"SELECT name, mtime FROM videos WHERE res_folder = '{curr_resolution}'")
+        db.execute(f"SELECT name, mtime, size FROM videos WHERE res_folder = '{curr_resolution}'")
         result = db.fetchall()
         for video in result:
             if video[0] in dir_videos:
+                total_size += video[2]
                 file_size = os.path.getsize(f"{root}/{curr_resolution}/{video[0]}")
                 file_mtime = int(os.path.getmtime(f"{root}/{curr_resolution}/{video[0]}"))
                 if video[1] != file_mtime:
@@ -168,7 +170,11 @@ def do_compare():
                 print(f" !!! MISSING >>> {video[0]}")
                 problem_videos.append([video[0], curr_resolution, "file missing"])
     mysql_close()
-    print()
+    total_size = round(total_size / 1024 / 1024 / 1024, 1)
+    print("\n"
+        f" Total size: {total_size} GB\n"
+        "\n")
+
     if not problem_videos:
         print(" No videos with issues.")
     else:
