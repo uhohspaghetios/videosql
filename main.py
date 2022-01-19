@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
-
-## Rich Gannon
 ##
-## Keep track of video collection for search and backup purposes
+## Author: Rich Gannon <rich@richgannon.net>
+##
+## Purpose: Keep track of video collection for search and backup purposes
 ##
 ## To do:
-## - Checksum files
+## > Checksum files
 ##   - Takes FOREVER
 ##   - After finalizing database structure and no longer dropping table every import
-## - Include TV show episodes
-## - Pretty pandas output
+## > Include TV show episodes
+## > Pretty pandas output
 ##   - How to transform mtime and size before output?
+## > Add function for requested videos
+## > Add function for video problems (i.e. bad subtitles, bad quality)
 ##
 
 
