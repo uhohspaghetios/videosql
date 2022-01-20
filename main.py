@@ -81,6 +81,7 @@ def do_import():
             "audio_channels ENUM('1','2','5','6','7','8') NOT NULL,"
             "audio_layout ENUM('5.0','5.1','6.1','7.1','mono','stereo','unknown') NOT NULL,"
             "PRIMARY KEY (id))")
+    db_conn.commit()
     print("Done")
     for curr_resolution in resolutions:
         print(f"Importing videos from {curr_resolution} ...")
